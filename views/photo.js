@@ -25,13 +25,20 @@ window.onload = function() {
     };
 
 
+
+
     //文件上传
     var fileEnter = document.getElementById('fileEnter');
+    var container=document.getElementById('container');
     fileEnter.addEventListener('change', function() {
+        //console.log(fileEnter.files[0].size);
+        //文件上传实现
         var files = fileEnter.files;
         var formData = new FormData();
-        formData.append('file', files[0]);
-        var xhr =createXHR();
+        for (var i = 0; i < files.length; i++) {
+            formData.append(files[i].name, files[i]);
+        }
+        var xhr = createXHR();
         xhr.onreadyStatechange = function() {
             if (xhr.readyState == 4) {
                 if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
@@ -41,11 +48,32 @@ window.onload = function() {
                 }
             }
         };
+        xhr.upload.onprogress = function(event) {
+            //console.log('1');
+            if (event.lengthComputable) {
+                var completedPercent = event.loaded / event.total;
+                //console.log(completedPercent);
+                container.innerHTML="<div style='margin:10px;'><span>"+files[0].name+"</span><br><progress value='"+completedPercent+"' max='1'></progress></div>";
+            }
+        };
+        xhr.timeout = 3000;
+        xhr.ontimeout = function() {
+            alert('传送超时');
+        };
         xhr.open('post', 'http://localhost:8008', true);
         xhr.setRequestHeader("Content-type", "multipart/form-data;boundary=bai");
         xhr.send(formData);
-
     });
+
+
+
+
+
+
+
+
+
+
 
 
 

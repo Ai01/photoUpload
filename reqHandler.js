@@ -79,7 +79,7 @@ function upload(pathname, req, res) {
                 var binaryDataAlmost = shorterData.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
                 // 保存文件
                 fs.writeFile(path.join('./file/', fileName), binaryDataAlmost, 'binary', function(err) {
-                    res.end('图片上传完成');
+                    res.end('good');
                 });
             } else {
                 res.end('只能上传图片文件');
